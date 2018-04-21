@@ -1,7 +1,7 @@
 function start() {
 	importFiles({
-		js:["https://raw.githubusercontent.com/qwertz0/Hello-World/master/src/base.js"],
-		css:["https://raw.githubusercontent.com/qwertz0/Hello-World/master/src/base.css"]
+		js:["https://rawgit.com/qwertz0/Hello-World/master/src/base.js"],
+		css:["https://rawgit.com/qwertz0/Hello-World/master/src/base.css"]
 	},()=>los());
 }
 
