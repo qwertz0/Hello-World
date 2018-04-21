@@ -1,5 +1,5 @@
 
-@font-face { font-family: 'fontello'; src: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/fontello.woff2) format('woff2'); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'fontello'; src: url(https://rawgithub.com/qwertz0/Hello-World/master/res/fontello.woff2) format('woff2'); font-weight: normal; font-style: normal; }
 
 body {
 	transition: .5s linear background-color;
@@ -127,7 +127,7 @@ body {
 	content: "";
   display: inline-block;
   position: absolute;
-  background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/b.svg);
+  background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/b.svg);
   width: 23px;
   height: 18px;
   bottom: 0;
@@ -140,7 +140,7 @@ body {
 	content: "";
   display: inline-block;
   position: absolute;
-  background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/g.svg);
+  background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/g.svg);
   width: 18px;
   height: 18px;
   bottom: 0;
@@ -212,10 +212,10 @@ input[type="checkbox"] + label:after {
   background-position: center;
   background-size:70%;
 } 
-input#cbBundesliga:checked + label:after { background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/b.svg); }
-input#cbBundesliga + label:after { background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/bg.svg); }
-input#cbGerman:checked + label:after { background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/g.svg); }
-input#cbGerman + label:after { background-image: url(https://raw.githubusercontent.com/qwertz0/Hello-World/master/res/gg.svg); }
+input#cbBundesliga:checked + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/b.svg); }
+input#cbBundesliga + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/bg.svg); }
+input#cbGerman:checked + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/g.svg); }
+input#cbGerman + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/gg.svg); }
 
 .menu {
 	position:fixed;
