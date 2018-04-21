@@ -1,5 +1,5 @@
 function start() {
-	const baseUrl="/dev/src/";
+	const baseUrl="https://raw.githubusercontent.com/qwertz0/Hello-World/master/src/";
 	importFiles({
 		js:["hls.light.min.js","base.js"].map(x=>baseUrl+x),
 		css:[baseUrl+"base.css"]
@@ -11,7 +11,7 @@ var video={
 	player:null,
 	init:function(callback) {
 		if (!Hls.isSupported()) {
-			msg.err("HLS nicht unterstützt!");
+			msg.err("HLS nicht unterstÃ¼tzt!");
 			callback(false);
 		} else {
 			
