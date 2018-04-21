@@ -1,0 +1,300 @@
+
+@font-face { font-family: 'fontello'; src: url(../res/fontello.woff2) format('woff2'); font-weight: normal; font-style: normal; }
+
+body {
+	transition: .5s linear background-color;
+	background: whitesmoke;
+	font-size: 16px;
+	font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+.player body { background-color:black; }
+
+.spinner {
+	z-index:2147483647;
+	display:none;
+	
+/* bereits im index
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	opacity:.9;
+	pointer-events:none;
+	color: dimgray;
+	font-size:12px;
+*/
+}
+
+.waiting .spinner,
+.err .spinner {
+	display:block;
+}
+
+/* bereits im index
+.spinner:before {
+	content:'';
+	width:6em;
+	height:6em;
+	border:.7em solid rgba(105,105,105,0.1);
+	border-radius:50%;
+	border-left-color:currentColor !important;
+	display:block;
+	position:absolute;
+	top:-3em;
+	left:-3em;
+	box-sizing:border-box;
+	animation: spin .8s linear infinite;
+}
+*/
+
+.err .spinner:before {
+	animation:none;
+	border-color: currentColor !important;
+}
+
+.warn .spinner:after,
+.err .spinner:after {
+  font-family: "fontello";
+	content: '\e800';
+  color: currentColor;
+  font-size: 2.1em;
+  display: block;
+  text-align: center;
+  width: 2em;
+  position: absolute;
+  left: -1em;
+  top: -0.58em;
+}
+
+.player .spinner {
+	color:whitesmoke;
+}
+
+.player .spinner:before {
+	border-color:rgba(205,205,205,0.3);
+}
+
+.err .spinner {
+	color:crimson !important;
+}
+
+.spinner-txt {
+	background-color: rgba(0,0,0,0.75);
+	border-radius:2px;
+	display:inline-block;
+	padding:6px;
+	width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-height: 86px;
+}
+.spinner-txt:empty { display:none; }
+
+.spinner-msg {
+	text-align:center;
+	position: absolute;
+  width: 300px;
+  left: -150px;
+  top: 3.8em;
+  color:#fafafa;
+  line-height:1.5em;
+}		
+
+.no-event { position:absolute; left:0; top:20px; width:100%; color:dimgray; font-style:italic; text-align:center; }
+
+.event { border:1px solid lightgray; margin:10px 12px; padding:10px; color: dimgray; border-radius: 4px; background:whitesmoke; position:relative; z-index:1; }
+.event-header { cursor:pointer; display:flex; justify-content:space-between; }
+.event-spinner:before {
+	animation: spinner-rotation .8s linear infinite;
+  display: inline-block;
+  width: 1em;
+  border: 5px solid rgba(105,105,105,0.1);
+  border-radius: 50%;
+  height: 1em;
+  border-left-color: dimgray;
+ }
+.event-error { color:red; }
+.event-stream { cursor:pointer; }
+.event-offline {  }
+.event-online { color:black; box-shadow: 1px 1px 2px lightgray; background: white; border-left: 4px solid limegreen; padding-left:8px; }
+.event-time { width:100px; position:relative; }
+.event-title { text-align:center; flex-grow:1;  }
+.event-title-title { display:block; font-weight:bold; }
+.event-title-league { display:block; }
+.event-lang { width:100px; overflow:hidden; text-overflow:ellipsis; text-align:right; }
+
+.event-bundesliga.event-online .event-time:before {
+	content: "";
+  display: inline-block;
+  position: absolute;
+  background-image: url(../res/b.svg);
+  width: 23px;
+  height: 18px;
+  bottom: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  background-position: center;				
+}
+
+.event-german.event-online .event-time:after {
+	content: "";
+  display: inline-block;
+  position: absolute;
+  background-image: url(../res/g.svg);
+  width: 18px;
+  height: 18px;
+  bottom: 0;
+  left: 2px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.event-bundesliga.event-german.event-online .event-time:after {
+	left:32px;
+}
+
+.event-content {
+	display: flex;
+	padding:10px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.event-stream {
+	cursor: pointer;
+  text-align: center;
+  margin: 10px;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  background: dimgray;
+  white-space: nowrap;
+}
+
+.event-visited {
+	background:steelblue;
+}
+
+.main {
+	position: fixed;
+	top: 0;
+	left: 150px;
+	height: 100%;
+	width: calc(100% - 150px);
+	overflow-y: auto;
+}
+.waiting .main, .err .main, .player .main,
+.waiting .menu, .err .menu, .player .menu,
+.waiting .ad-warn, .err .ad-warn, .player .ad-warn { display:none; }
+
+.german .event:not(.event-german) { display:none; }
+.bundesliga .event:not(.event-bundesliga) { display:none; }
+
+#reloadBtn { cursor:pointer; text-align: center; margin-bottom: 10px; }
+
+#reloadBtn:before {
+  font-family: "fontello";
+  content: "\e801";
+  font-size: 70px;
+  display: block;
+}
+
+input[type="checkbox"] { position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;	}
+input[type="checkbox"] + label { display:block; margin-bottom:10px; }
+input[type="checkbox"] + label:after {
+	content: "";
+  width: 100%;
+  font-size: 30px;
+  cursor: pointer;
+  height: 100px;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size:70%;
+} 
+input#cbBundesliga:checked + label:after { background-image: url(../res/b.svg); }
+input#cbBundesliga + label:after { background-image: url(../res/bg.svg); }
+input#cbGerman:checked + label:after { background-image: url(../res/g.svg); }
+input#cbGerman + label:after { background-image: url(../res/gg.svg); }
+
+.menu {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:150px;
+	padding:20px;
+	box-sizing:border-box;
+	text-align:center;
+	/*background:rgba(200,200,200,0.2);*/
+	height:100%;
+  display: flex;
+  flex-direction: column;	
+}
+
+.ad-warn {
+	color: maroon;
+  position: fixed;
+  font-weight: bold;
+  opacity: 0.7;
+  font-size: 18px;
+  right: 21px;
+  bottom: 0;
+  background: white;
+  padding: 10px;
+}
+
+/* bereits im index
+@keyframes spin { 100% { transform: rotate(360deg) } }
+*/
+
+/* nur Addon */
+#player { display:none; width:100%; height:100%; position:fixed; left:0; top:0; }
+.player #player { display:block; }
+
+/* nur Android */
+.btn-exit {
+	min-height: 65px;
+	flex-grow: 1;
+  position: relative;
+}
+.btn-exit-btn {
+	cursor:pointer;
+	position:absolute;
+	left:0;
+	bottom:0;
+	color: dimgray;
+	text-align: center;
+	width:100%;
+}
+.btn-exit-btn:before {
+  font-family: "fontello";
+  content: "\e802";
+  font-size: 44px;
+  display: block;
+  padding-left: 2px;
+}
+
+.msg-exit {
+	position:fixed;
+	top:50%;
+	width:100%;
+	pointer-events:none;
+	text-align:center;
+	z-index:2147483647;	
+	opacity:1;
+	visibility:hidden;
+}
+
+.exit .msg-exit {
+	opacity:0;
+	transition:opacity 1.1s linear;
+	visibility:visible;
+}
+
+.msg-exit:before {
+	display:inline-block;
+	content:"Zum Beenden Doppel-Zurück";
+	background: lightgray;
+  padding: 20px;
+  color: dimgray;
+}
