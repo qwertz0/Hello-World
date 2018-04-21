@@ -175,7 +175,7 @@ function los() {
 								
 								function getStream(u,k,callback,errfnc) {
 									console.log("Aufrufen",u);
-									msg.waiting("Öffne Stream [3]");
+									msg.waiting("&Ouml;ffne Stream [3]");
 									xmlRequest(u,{'responseType':'document'},function(doc){
 										const z=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("document.write")).map(s=>{
 											const z=s.textContent.match(/src\s*=\s*["']([^"']+)/i);
@@ -186,7 +186,7 @@ function los() {
 										}).filter(x=>x!==null)[0]||null;
 										tmp.innerText="";
 										if (z) {
-											msg.waiting("Öffne Stream [4]");
+											msg.waiting("&Ouml;ffne Stream [4]");
 											xmlRequest(z,{'responseType':'document'},function(doc) {
 												const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
 															postUrl=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("action")).map(x=>{
@@ -195,7 +195,7 @@ function los() {
 															}).filter(x=>x!==null)[0]||null;
 												console.log("Aufrufen",postUrl,postData);
 												if (postData!=="" && postUrl) {
-													msg.waiting("Öffne Stream [5]");
+													msg.waiting("&Ouml;ffne Stream [5]");
 													xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
 														const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
 														let t=null;
