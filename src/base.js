@@ -233,8 +233,8 @@ function los() {
 				
 				function fetchAdshell(url,callback) {
 					
-					callback(99);
-					return;
+					//callback(99);
+					//return;
 					
 					xmlRequest(url,null,function(txt){
 						const m=txt.match(/url\s*:\s*["']([^"']+)/i);
