@@ -54,7 +54,10 @@ var backbutton=(function() {
 		if (flag.contains("exit")) {
 			navigator.app.exitApp();
 		} else if (flag.contains("player")) {
-			flag.remove("player");			
+			flag.remove("player");
+		} else if (flag.contains("err")) {
+			if (hasEvents) msg.clear();
+				else location.reload();
 		} else {
 			flag.add("exit");
 			setTimeout(()=>flag.remove("exit"),1000);			
