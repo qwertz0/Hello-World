@@ -1,5 +1,5 @@
 function start() {
-	const baseUrl="https://rawgithub.com/qwertz0/Hello-World/master/src/";
+	const baseUrl="https://rawgit.com/qwertz0/Hello-World/master/src/";
 	importFiles({
 		js:["hls.light.min.js","base.js"].map(x=>baseUrl+x),
 		css:[baseUrl+"base.css"]
