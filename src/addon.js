@@ -11,7 +11,7 @@ var video={
 	player:null,
 	init:function(callback) {
 		if (!Hls.isSupported()) {
-			msg.err("HLS nicht unterstützt!");
+			msg.err("HLS nicht unterst&uuml;tzt!");
 			callback(false);
 		} else {
 			
