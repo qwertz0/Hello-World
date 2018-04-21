@@ -30,7 +30,7 @@ var video={
 				url: url,
 			},
 			function(success){
-				console.log(success);
+				//console.log(success);
 		    if(success.eventKeycode == 'KEYCODE_BACK'){
 		        window.ExoPlayer.close();
 		        flag.remove("player");
@@ -51,9 +51,10 @@ var backbutton=(function() {
 	exitMsg.className="msg-exit";
 	document.body.appendChild(exitMsg);
 	return function() {
-		console.log("bbback");
 		if (flag.contains("exit")) {
 			navigator.app.exitApp();
+		} else if (flag.contains("player")) {
+			flag.remove("player");			
 		} else {
 			flag.add("exit");
 			setTimeout(()=>flag.remove("exit"),1000);			
