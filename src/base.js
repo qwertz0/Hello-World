@@ -1,3 +1,5 @@
+var hasEvents=false;
+
 const flag=document.documentElement.classList,
 			msg=(function() {
 				document.getElementById("spinner").innerHTML='<div class="spinner-msg"><span id="msgTxt" class="spinner-txt"></span></div>';	
@@ -108,6 +110,7 @@ function los() {
 								
 								if (X.length>0) {
 									console.log("Gefundene Events",X);
+									hasEvents=true;
 									msg.clear();
 									X.forEach(x=>{
 										let loading=false;
@@ -232,19 +235,17 @@ function los() {
 				} // getKey
 				
 				function fetchAdshell(url,callback) {
-					
-					//callback(99);
-					//return;
-					
 					xmlRequest(url,null,function(txt){
 						const m=txt.match(/url\s*:\s*["']([^"']+)/i);
 						if (m) {
-							xmlRequest(m[1],{responseType:'document'},function(doc){
+							xmlRequest(m[1],{responseType:'document'},()=>callback(0)
+							/* wohl nicht notwendig
+							function(doc){
 								const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
 											z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
 								if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
 									else calback(4);
-							},()=>callback(3));
+							}*/,()=>callback(3));
 						} else callback(2);
 					},()=>callback(1));
 				} // fetchAdshell
