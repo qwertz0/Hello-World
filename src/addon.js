@@ -64,13 +64,18 @@ var video={
 };
 
 document.addEventListener("keydown", function(e) {
-	if (e.keyCode===27 && document.fullscreenElement!==null && flag.contains("player")) {
-		flag.remove("player");
-		if (video.hls) {
-			video.hls.destroy();
-			if (video.hls.bufferTimer) { clearInterval(video.hls.bufferTimer); video.hls.bufferTimer=undefined; }
-			video.hls=null;
+	if (e.keyCode===27 && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement)===null) {
+		if (flag.contains("player")) {
+			flag.remove("player");
+			if (video.hls) {
+				video.hls.destroy();
+				if (video.hls.bufferTimer) { clearInterval(video.hls.bufferTimer); video.hls.bufferTimer=undefined; }
+				video.hls=null;
+			}
+			msg.clear();
+		} else if (flag.contains("err")) {
+			if (hasEvents) msg.clear();
+				else location.reload();
 		}
-		msg.clear();
 	}
 });
