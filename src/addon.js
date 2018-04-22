@@ -64,7 +64,7 @@ var video={
 };
 
 document.addEventListener("keydown", function(e) {
-	if (e.keyCode===27 && (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement)===null) {
+	if (e.keyCode===27 && (document.mozFullScreenElement===null || document.webkitFullscreenElement===null)) {
 		if (flag.contains("player")) {
 			flag.remove("player");
 			if (video.hls) {
