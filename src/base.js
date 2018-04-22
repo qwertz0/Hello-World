@@ -44,7 +44,7 @@ function los() {
 	video.init(isInit=>{
 		if (isInit) {
 			
-			const xUrl="http://www.sport365.live/de/events/-/1/-/-/120";
+			const xUrl="http://www.sport365.live/de/events/-/1/10/-/120";
 
 			msg.info("Laden [1]");
 			console.log("Laden","http://www.sport365.live/de/home");
