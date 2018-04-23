@@ -18,33 +18,47 @@ const flag=document.documentElement.classList,
 				
 function los() {
 	
+	const mehrAlsFussball=window.localStorage.getItem("all")==="true";
+	
 	const leftMenu=document.createElement("div");
 	leftMenu.className="menu";
 	leftMenu.id="leftMenu";
-	leftMenu.innerHTML='<div id="reloadBtn"></div><input type="checkbox" id="cbBundesliga" checked><label for="cbBundesliga"></label><input type="checkbox" id="cbGerman" checked><label for="cbGerman"></label>';
+	
+	leftMenu.innerHTML='<div id="reloadBtn"><svg viewBox="0 0 857 1000"><g transform="matrix(1 0 0 -1 0 850)"><path fill="currentColor" d="M857 707v-250q0 -14 -10 -25t-26 -11h-250q-23 0 -32.5 22.5t7.5 38.5l77 77q-82 77 -194 77q-58 0 -111 -23t-91 -61t-61 -91t-23 -111t23 -111t61 -91t91 -61t111 -23q66 0 125 29t100 82q4 6 12.5 6.5t14.5 -4.5l76 -77q5 -4 6 -11t-5 -13q-60 -74 -147 -114t-182 -41q-87 0 -167 34t-136 92t-92 137t-34 166t34 166t92 137t136 92t167 34q82 0 158 -31t137 -88l72 72q17 18 39 8.5t22 -33.5z" /></g></svg></div>'
+		+(mehrAlsFussball?'':'<input type="checkbox" id="cbBundesliga"><label for="cbBundesliga"><svg viewBox="0 0 245.1 196"><g transform="translate(-43.5,-12)"><rect x="43.2" y="12" fill="#D20515" width="245" height="196"/><path fill="white" d="M245.2,115.2c0.1,0.5-0.3,0.8-1.2,1.5l-0.5,0.3l0.2,0.4c0.1,0.2-0.1,0.6-0.5,0.8l-0.8,0.4c-0.4,0.2-0.8,0.2-0.9-0.1l-0.2-0.3l-1,0.5l0.2,0.3c0.1,0.2-0.1,0.6-0.5,0.7l-0.8,0.4c-0.4,0.2-0.8,0.1-0.9-0.1l-0.1-0.3c-3.1,1.5-6.7,3-10.3,4.7l0.2,0.5c0.1,0.2-0.1,0.6-0.5,0.7l-0.8,0.4c-0.4,0.2-0.8,0.1-0.9-0.1l-0.2-0.5l-1.2,0.6l0.2,0.5c0.1,0.2-0.1,0.6-0.5,0.7l-0.8,0.4c-0.4,0.2-0.8,0.1-0.9-0.1l-0.2-0.5c-1.6,0.7-3.4,1-4.7-1.5c-0.6-1.1-0.6-3.7-1-5.1c-0.2-0.4-0.6-0.8-1.1-0.8c-16-3.1-21.4,0.3-31.6-2.2c-3.2-0.8-5-3.7-8.9-3.8c-8.6-0.3-11.2-0.1-20.6-0.5c-0.4,1.4-0.5,1.7-0.5,1.7l-32.9-0.2l5,2.5l1.6,14.5c0,0-1.3,0.4-1.7,0.4c0.3,2.9,0.6,6.8,0.8,10.4c0.1,3.2,0.3,6.5,0.3,8.6c0,1.4-0.3,2.7-1,3.9c-0.6,1.1-1.5,2-2.5,2.7c-0.3,0.2-1.6,1.1-3,1.9c-1.5,0.8-3.2,1.8-4.1,2.2c0.1,0.4,0.3,0.8,0.5,1.1c-20,9.7-44.8,13-52.9,28.4c-1,1.8-4.2,0.9-4.3-1.1c0-0.9,0-2.3,0-3.1h-0.3c-0.3,0-0.5-0.4-0.4-0.8v-0.9c0-0.4,0.2-0.7,0.5-0.7h0.3c0.1-0.9,0.3-1.8,0.5-2.6l-0.3-0.1c-0.2-0.1-0.3-0.5-0.2-0.9l0.3-0.8c0.1-0.4,0.4-0.6,0.7-0.6l0.3,0.1c1.4-3.3,4.2-4.8,5.5-8l-0.2-0.1c-0.3-0.1-0.3-0.5-0.2-0.9l0.3-0.9c0.1-0.4,0.5-0.6,0.7-0.5l0.2,0.1c0.2-0.5,0.4-1,0.7-1.5l-0.3-0.2c-0.2-0.1-0.2-0.5,0-0.9l0.5-0.8c0.2-0.3,0.6-0.5,0.8-0.4l0.1,0.1h0.1c0.1,0,0.1,0,0.2-0.1c0.1-0.1,0.3-0.3,0.4-0.4c1.3-0.9,3-1,4.2-0.1c1.3,0.8,6.2,3.6,10.9-0.7c7.8-7,16.9-16.5,23.8-16.9c-1.9-4-5.1-12.4-5.5-15.5l-2.2-0.5c-1.2-2.6-4.1-14.5-4.9-23.5c0,0-1-9.7,0-13.1c-0.5-0.1-1.5,0.7-1.8,0.7c-1.3-3.1,2.8-29.1,6.9-36.7l6.2-2.5c-0.6-0.1-5.1-0.3-16.9-1.2C84,61.3,76.4,67.6,72.6,71c-0.7,0.5-1.7,4.2-1.7,4.2s-1.9,1.7-3.8,3c-2.4,1.7-8.2,3-9.5,1c-0.3-0.5-0.2-0.7,0-1c0.9-1,4.3-2.6,5.5-4.7c-1.9,1-3.9,1.9-5.6,1.8c-0.7,0-1.1-1.8-0.2-2.1c2.5-1,4.4-1.5,5.9-3.6s3.1-3.3,5.4-3.3c0,0,10.9-14.3,17.4-21.1c1.8-1.9,5.1-1.2,5.1-1.2l0.6-2.2c0,0,22.1-2.6,32.4,0.8c-0.2-6.3,2.6-14.6,12.4-14.6c5,0,12.4,4.4,13.4,9.8c0.3,1.7-0.7,2.8-1.2,4.9c-0.9,3.2,0.3,6.7,0,7.8c-0.3,0.9-1.3,0.8-2.2,2.1c-0.8,1.2-1.5,2.5-2,3.8l-1.3,3l-6.9-0.5c-2.5,5.4-7.7,16.5-9.5,27.5l0,0c5.4,0.5,30,4,30,4l0.6,2c0,0,10.3,1.2,18.8,5.3c1.9,0.5,6.6-0.2,9.8,1.2c0.2-0.1,0.7-0.7,1-0.8c11,3.4,20.2,9.2,30.8,11.8c0,0,5,1.2,6.6,1.5c2.8,0.5,5.7,0.9,8.5,1.1c3.4,0.3,5.3,0.2,7.8,0.4C242.4,112.9,244.5,112.6,245.2,115.2 M261,81.6c-7.5,0-13.6,6.1-13.6,13.6c0,7.5,6.1,13.6,13.6,13.6c7.5,0,13.6-6.1,13.6-13.6c0,0,0,0,0,0C274.6,87.7,268.5,81.6,261,81.6L261,81.6L261,81.6z"/></g></svg></label>')
+		+'<input type="checkbox" id="cbGerman"><label for="cbGerman"><svg viewBox="0 0 512 512"><path fill="#FFDA44" d="M15.923,345.043C52.094,442.527,145.929,512,256,512s203.906-69.473,240.077-166.957L256,322.783L15.923,345.043z"/><path d="M256,0C145.929,0,52.094,69.472,15.923,166.957L256,189.217l240.077-22.261C459.906,69.472,366.071,0,256,0z"/><path fill="#D80027" d="M15.923,166.957C5.633,194.69,0,224.686,0,256s5.633,61.31,15.923,89.043h480.155C506.368,317.31,512,287.314,512,256s-5.632-61.31-15.923-89.043H15.923z"/></svg></label>';
+		//+'<div class="btn-exit"><svg viewBox="0 0 928 1000"><g transform="matrix(1 0 0 -1 0 850)"><path fill="currentColor" d="M357 46q0 -2 1 -11t0 -14l-2 -14q-1 -9 -5 -11t-12 -3h-178q-67 0 -114 47t-47 114v392q0 67 47 114t114 47h178q8 0 13 -5t5 -13l1 -11q1 -9 0 -15l-2 -13q-1 -7 -5 -11t-12 -3h-178q-37 0 -63 -26t-27 -64v-392q0 -37 27 -63t63 -27h180q6 0 7 -2t4 -3t4 -5t1 -8z M875 350q0 -14 -11 -25l-303 -304q-11 -10 -25 -10t-25 10t-11 25v161h-250q-14 0 -25 11t-11 25v214q0 15 11 25t25 11h250v161q0 14 11 25t25 10t25 -10l303 -304q11 -10 11 -25z" /></g></svg></div>';
+	
 	document.body.appendChild(leftMenu);
 	
 	const mainContent=document.createElement("div");
 	mainContent.className="main";
 	mainContent.id="mainContent";
-	mainContent.innerHTML='<div class="no-event">kein Ereignis!</div>';
+	mainContent.innerHTML='<div class="no-event">kein Ereignis!</div>';	
 	document.body.appendChild(mainContent);
 
-	flag.add("german","bundesliga");
 	(function() {
 		const cbGerman=document.getElementById("cbGerman"),
-					cbBundesliga=document.getElementById("cbBundesliga"),
 					reloadBtn=document.getElementById("reloadBtn");
-		cbGerman.onclick=function() { flag.toggle("german"); }	
-		cbBundesliga.onclick=function() { flag.toggle("bundesliga"); }	
-		reloadBtn.onclick=function() { location.reload(); }
+		cbGerman.checked=flag.toggle("german",window.localStorage.getItem("german")!=="false");
+		cbGerman.onclick=function() { window.localStorage.setItem("german",flag.toggle("german")?"true":"false"); };
+		reloadBtn.onclick=function() { location.reload(); };
+		reloadBtn.oncontextmenu=function() {
+			window.localStorage.setItem("all",mehrAlsFussball?"false":"true");
+			location.reload();
+			return false;
+		};
+		if (!mehrAlsFussball) {
+			const cbBundesliga=document.getElementById("cbBundesliga");
+			cbBundesliga.checked=flag.toggle("bundesliga",window.localStorage.getItem("bundesliga")!=="false");
+			cbBundesliga.onclick=function() { window.localStorage.setItem("bundesliga",flag.toggle("bundesliga")?"true":"false"); };
+		}
 	})();	
-	
 	
 	video.init(isInit=>{
 		if (isInit) {
 			
-			const xUrl="http://www.sport365.live/de/events/-/1/10/-/120";
+			const xUrl=mehrAlsFussball?"http://www.sport365.live/de/events/-/1/-/-/120":"http://www.sport365.live/de/events/-/1/10/-/120";
 
 			msg.info("Laden [1]");
 			console.log("Laden","http://www.sport365.live/de/home");
@@ -120,7 +134,8 @@ function los() {
 										objContent.className="event-content";
 										obj.appendChild(objContent);
 										if (x.online) {
-											obj.onclick=function() {
+											obj.onclick=function(e) {
+												console.log("E",e);
 												if (loading) return;
 												loading=true;
 												console.log("Aufrufen",x.title,x.url);
