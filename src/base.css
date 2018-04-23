@@ -1,6 +1,3 @@
-
-@font-face { font-family: 'fontello'; src: url(https://rawgithub.com/qwertz0/Hello-World/master/res/fontello.woff2) format('woff2'); font-weight: normal; font-style: normal; }
-
 body {
 	transition: .5s linear background-color;
 	background: whitesmoke;
@@ -54,16 +51,23 @@ body {
 
 .warn .spinner:after,
 .err .spinner:after {
-  font-family: "fontello";
-	content: '\e800';
-  color: currentColor;
-  font-size: 2.1em;
-  display: block;
-  text-align: center;
+	content:' ';
   width: 2em;
+  height: 2em;
   position: absolute;
   left: -1em;
-  top: -0.58em;
+  top: -1em;
+  display: block;
+	background-size:100%;
+	background-repeat:no-repeat;
+}
+
+.warn .spinner:after {
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1000 1000"><g transform="matrix(1 0 0 -1 0 850)"><path fill="dimgray" d="M571 83v106q0 8 -5 13t-12 5h-108q-7 0 -12 -5t-5 -13v-106q0 -8 5 -13t12 -6h108q7 0 12 6t5 13zM570 291l10 257q0 6 -5 10q-7 6 -14 6h-122q-6 0 -14 -6q-5 -4 -5 -12l9 -255q0 -5 6 -9t13 -3h103q8 0 14 3t5 9zM563 813l428 -786q20 -35 -1 -70q-9 -17 -26 -26 t-35 -10h-858q-18 0 -35 10t-26 26q-21 35 -1 70l429 786q9 17 26 27t36 10t36 -10t27 -27z" /></g></svg>')
+}
+
+.err .spinner:after {
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1000 1000"><g transform="matrix(1 0 0 -1 0 850)"><path fill="crimson" d="M571 83v106q0 8 -5 13t-12 5h-108q-7 0 -12 -5t-5 -13v-106q0 -8 5 -13t12 -6h108q7 0 12 6t5 13zM570 291l10 257q0 6 -5 10q-7 6 -14 6h-122q-6 0 -14 -6q-5 -4 -5 -12l9 -255q0 -5 6 -9t13 -3h103q8 0 14 3t5 9zM563 813l428 -786q20 -35 -1 -70q-9 -17 -26 -26 t-35 -10h-858q-18 0 -35 10t-26 26q-21 35 -1 70l429 786q9 17 26 27t36 10t36 -10t27 -27z" /></g></svg>');
 }
 
 .player .spinner {
@@ -87,6 +91,7 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   max-height: 86px;
+  box-sizing: border-box;
 }
 .spinner-txt:empty { display:none; }
 
@@ -127,7 +132,7 @@ body {
 	content: "";
   display: inline-block;
   position: absolute;
-  background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/b.svg);
+  background-image: url(../res/b.svg);
   width: 23px;
   height: 18px;
   bottom: 0;
@@ -140,7 +145,7 @@ body {
 	content: "";
   display: inline-block;
   position: absolute;
-  background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/g.svg);
+  background-image: url(../res/g.svg);
   width: 18px;
   height: 18px;
   bottom: 0;
@@ -190,32 +195,13 @@ body {
 .german .event:not(.event-german) { display:none; }
 .bundesliga .event:not(.event-bundesliga) { display:none; }
 
-#reloadBtn { cursor:pointer; text-align: center; margin-bottom: 10px; }
+svg { width: 1em; }
 
-#reloadBtn:before {
-  font-family: "fontello";
-  content: "\e801";
-  font-size: 70px;
-  display: block;
-}
+#reloadBtn { cursor:pointer; margin-bottom: .3em; }
 
 input[type="checkbox"] { position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;	}
-input[type="checkbox"] + label { display:block; margin-bottom:10px; }
-input[type="checkbox"] + label:after {
-	content: "";
-  width: 100%;
-  font-size: 30px;
-  cursor: pointer;
-  height: 100px;
-  display: block;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size:70%;
-} 
-input#cbBundesliga:checked + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/b.svg); }
-input#cbBundesliga + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/bg.svg); }
-input#cbGerman:checked + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/g.svg); }
-input#cbGerman + label:after { background-image: url(https://rawgithub.com/qwertz0/Hello-World/master/res/gg.svg); }
+input[type="checkbox"] + label { display:block; margin-bottom:.3em; width:1em; cursor:pointer; }
+input[type="checkbox"]:checked + label { filter:grayscale(1); opacity:0.8; }
 
 .menu {
 	position:fixed;
@@ -228,7 +214,9 @@ input#cbGerman + label:after { background-image: url(https://rawgithub.com/qwert
 	/*background:rgba(200,200,200,0.2);*/
 	height:100%;
   display: flex;
-  flex-direction: column;	
+  flex-direction: column;
+  align-items:center;
+  font-size:70px;
 }
 
 .ad-warn {
@@ -253,25 +241,27 @@ input#cbGerman + label:after { background-image: url(https://rawgithub.com/qwert
 
 /* nur Android */
 .btn-exit {
-	min-height: 65px;
-	flex-grow: 1;
-  position: relative;
-}
-.btn-exit-btn {
 	cursor:pointer;
-	position:absolute;
-	left:0;
-	bottom:0;
-	color: dimgray;
-	text-align: center;
-	width:100%;
+	font-size:36px;
+	display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  pointer-events: none;	
 }
-.btn-exit-btn:before {
-  font-family: "fontello";
-  content: "\e802";
-  font-size: 44px;
-  display: block;
-  padding-left: 2px;
+
+.btn-exit:before {
+	content:'';
+	flex-grow: 1;
+}
+
+.btn-exit * {
+	pointer-events: bounding-box;
+}
+
+.btn-exit:after {
+	content:'Ende';
+	font-size:16px;
+	pointer-events: bounding-box;
 }
 
 .msg-exit {
@@ -298,3 +288,5 @@ input#cbGerman + label:after { background-image: url(https://rawgithub.com/qwert
   padding: 20px;
   color: dimgray;
 }
+
+.main.scrll * { pointer-events:none !important; }
