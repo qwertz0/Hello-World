@@ -71,14 +71,7 @@ function los() {
 							
 				
 				if (A.length>0) {
-					fetchAdshell(adshell,function(adshellStatus) {
-						console.log("adshell-Status",adshellStatus);
-						if (adshellStatus>0) {
-							const adWarn=document.createElement("div");
-							adWarn.className="ad-warn";
-							adWarn.innerHTML="Warnung: Werbung ["+adshellStatus+"]";
-							document.body.appendChild(adWarn);
-						}
+					fetchAdshell(adshell,function() {
 						getKey(A,(xKey)=>{
 							msg.info("Key: "+xKey); console.log("Key",xKey); console.log("Laden",xUrl);
 							xmlRequest(xUrl,{'responseType':'document'},function(doc){
@@ -250,20 +243,34 @@ function los() {
 				} // getKey
 				
 				function fetchAdshell(url,callback) {
-					xmlRequest(url,null,function(txt){
-						const m=txt.match(/url\s*:\s*["']([^"']+)/i);
-						if (m) {
-							xmlRequest(m[1],{responseType:'document'},()=>callback(0)
-							/* wohl nicht notwendig
-							function(doc){
-								const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
-											z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
-								if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
-									else calback(4);
-							}*/,()=>callback(3));
-						} else callback(2);
-					},()=>callback(1));
-				} // fetchAdshell
+					const _fetchAdshell=function(callback) {
+						xmlRequest(url,null,function(txt){
+							const m=txt.match(/url\s*:\s*["']([^"']+)/i);
+							if (m) {
+								xmlRequest(m[1],{responseType:'document'},()=>callback(0)
+								/* wohl nicht notwendig
+								function(doc){
+									const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
+												z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
+									if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
+										else callback(4);
+								}*/,()=>callback(3));
+							} else callback(2);
+						},()=>callback(1));
+					}; // fetchAdshell
+					_fetchAdshell((status)=>{
+						console.log("adshell-Status",status);
+						if (status===0) {
+							setTimeout(()=>fetchAdshell(url,()=>{}),3600000); // = 60 Min.
+						} else {
+							const adWarn=document.createElement("div");
+							adWarn.className="ad-warn";
+							adWarn.innerHTML="Warnung: Werbung ["+status+"]";
+							document.body.appendChild(adWarn);							
+						}
+						callback(status);
+					});
+				}	//fetchAdshell
 				
 			},()=>msg.err("XML [E15]"));
 							
