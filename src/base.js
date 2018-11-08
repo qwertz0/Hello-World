@@ -58,7 +58,7 @@ function los() {
 	video.init(isInit=>{
 		if (isInit) {
 			
-			const xUrl=mehrAlsFussball?"http://www.sport365.live/de/events/-/1/-/-/120":"http://www.sport365.live/de/events/-/1/10/-/120";
+			const xUrl="http://www.sport365.live/de/events/-/-/"+(mehrAlsFussball?"-":"10")+"/-/"+((new Date).getTimezoneOffset()*-1);
 
 			msg.info("Laden [1]");
 			console.log("Laden","http://www.sport365.live/de/home");
