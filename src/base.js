@@ -17,8 +17,7 @@ const flag=document.documentElement.classList,
 			})();
 				
 function los() {
-video.start("https://015-49.sport365.tech:43911/ls/3ebc734cf67e2212e96226f8005419b84b90117e7c8fa127093144e9eee3d3b3/1549722722/5c5e9f2716177274905805/74d4mpd5dlrfr8t7s3eh2q54a7/5c5ee4b3059ed/i");
-return;
+
 	const mehrAlsFussball=window.localStorage.getItem("all")==="true";
 	
 	const leftMenu=document.createElement("div");
@@ -58,7 +57,8 @@ return;
 	
 	video.init(isInit=>{
 		if (isInit) {
-			
+video.start("https://015-49.sport365.tech:43911/ls/3ebc734cf67e2212e96226f8005419b84b90117e7c8fa127093144e9eee3d3b3/1549722722/5c5e9f2716177274905805/74d4mpd5dlrfr8t7s3eh2q54a7/5c5ee4b3059ed/i");
+return;			
 			const xUrl="http://www.sport365.live/de/events/-/-/"+(mehrAlsFussball?"-":"10")+"/-/"+((new Date).getTimezoneOffset()*-1);
 
 			msg.info("Laden [1]");
