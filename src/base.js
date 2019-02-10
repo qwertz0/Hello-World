@@ -1,4 +1,4 @@
-//v1.1
+//v1.1.1
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -65,14 +65,14 @@ function los() {
 			console.log("Laden","http://www.sport365.live/de/home");
 			xmlRequest("http://www.sport365.live/de/home",{'responseType':'document'},function(doc){
 				
-				const [A,adshell]=(function() {
-					const s=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src);
-					return [s.filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x)),s.filter(x=>x.includes("adshell.net"))[0]||null];
-				})();
-							
+				const A=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src).filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x)),
+					adshell=(function() {
+						const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
+						return s?s+'?'+Math.floor(Math.random()*99999999999):null;
+					})();		
 				
 				if (A.length>0) {
-//					fetchAdshell(adshell,function() {
+					fetchAdshell(adshell,function() {
 						getKey(A,(xKey)=>{
 							msg.info("Key: "+xKey); console.log("Key",xKey); console.log("Laden",xUrl);
 							xmlRequest(xUrl,{'responseType':'document'},function(doc){
@@ -227,7 +227,7 @@ function los() {
 							},()=>msg.err("XML [E11]"));
 							
 						},(e)=>msg.err(e));
-//					}); // fetchAdshell
+					}); // fetchAdshell
 				} else msg.err("Nichts gefunden! [E12]")
 				
 				function getKey(A,callback,errfnc) {
@@ -244,35 +244,35 @@ function los() {
 					}	
 				} // getKey
 				
-//				function fetchAdshell(url,callback) {
-//					const _fetchAdshell=function(callback) {
-//						xmlRequest(url,null,function(txt){
-//							const m=txt.match(/url\s*:\s*["']([^"']+)/i);
-//							if (m) {
-//								xmlRequest(m[1],{responseType:'document'},()=>callback(0)
-//								/* wohl nicht notwendig
-//								function(doc){
-//									const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
-//												z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
-//									if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
-//										else callback(4);
-//								}*/,()=>callback(3));
-//							} else callback(2);
-//						},()=>callback(1));
-//					}; // fetchAdshell
-//					_fetchAdshell((status)=>{
-//						console.log("adshell-Status",status);
-//						if (status===0) {
-//							setTimeout(()=>fetchAdshell(url,()=>{}),3600000); // = 60 Min.
-//						} else {
-//							const adWarn=document.createElement("div");
-//							adWarn.className="ad-warn";
-//							adWarn.innerHTML="Warnung: Werbung ["+status+"]";
-//							document.body.appendChild(adWarn);							
-//						}
-//						callback(status);
-//					});
-//				}	//fetchAdshell
+				function fetchAdshell(url,callback) {
+					const _fetchAdshell=function(callback) {
+						xmlRequest(url,null,function(txt){
+							const m=txt.match(/url\s*:\s*["']([^"']+)/i);
+							if (m) {
+								xmlRequest(m[1],{responseType:'document'},()=>callback(0)
+								/* wohl nicht notwendig
+								function(doc){
+									const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
+												z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
+									if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
+										else callback(4);
+								}*/,()=>callback(3));
+							} else callback(2);
+						},()=>callback(1));
+					}; // fetchAdshell
+					_fetchAdshell((status)=>{
+						console.log("adshell-Status",status);
+						if (status===0) {
+							setTimeout(()=>fetchAdshell(url,()=>{}),3600000); // = 60 Min.
+						} else {
+							const adWarn=document.createElement("div");
+							adWarn.className="ad-warn";
+							adWarn.innerHTML="Warnung: Werbung ["+status+"]";
+							document.body.appendChild(adWarn);							
+						}
+						callback(status);
+					});
+				}	//fetchAdshell
 				
 			},()=>msg.err("XML [E15]"));
 							
