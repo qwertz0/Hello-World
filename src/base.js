@@ -1,4 +1,4 @@
-//v1.1.1
+//v1.1.2
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -129,7 +129,6 @@ function los() {
 										obj.appendChild(objContent);
 										if (x.online) {
 											obj.onclick=function(e) {
-												console.log("E",e);
 												if (loading) return;
 												loading=true;
 												console.log("Aufrufen",x.title,x.url);
