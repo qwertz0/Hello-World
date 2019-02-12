@@ -1,4 +1,4 @@
-//v1.1.2
+//v1.2
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -66,11 +66,12 @@ function los() {
 			xmlRequest("http://www.sport365.live/de/home",{'responseType':'document'},function(doc){
 				
 				const A=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src).filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x)),
-					adshell=(function() {
-						const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
-						return s?s+'?'+Math.floor(Math.random()*99999999999):null;
-					})();		
-				
+//v1.1
+//					adshell=(function() {
+//						const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
+//						return s?s+'?'+Math.floor(Math.random()*99999999999):null;
+//					})();
+				      adshell=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("adshell"))[0]||{}).src||null;
 				if (A.length>0) {
 					fetchAdshell(adshell,function() {
 						getKey(A,(xKey)=>{
@@ -188,6 +189,7 @@ function los() {
 									console.log("Aufrufen",u);
 									msg.waiting("&Ouml;ffne Stream [3]");
 									xmlRequest(u,{'responseType':'document'},function(doc){
+//v1.0
 //										const z=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("document.write")).map(s=>{
 //											const z=s.textContent.match(/src\s*=\s*["']([^"']+)/i);
 //											if (z) {
@@ -196,7 +198,17 @@ function los() {
 //											} else return null;
 //										}).filter(x=>x!==null)[0]||null;
 //										tmp.innerText="";
-										const z=(doc.querySelector("#area-middle iframe")||{}).src||null;
+//v1.1
+//										const z=(doc.querySelector("#area-middle iframe")||{}).src||null;
+										const z=(function(){
+											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("iframe")),
+												m=s?s[0].textContent.match(/<iframe.*src\s*=\s*["']([^"']+).*<\/iframe>/):null;
+											if (m) {
+												tmp.innerHTML=m[1];
+												return tmp.innerText; // oder .textContent 
+											} else return null
+										})();
+										tmp.innerText="";
 										if (z) {
 											msg.waiting("&Ouml;ffne Stream [4]");
 											xmlRequest(z,{'responseType':'document'},function(doc) {
