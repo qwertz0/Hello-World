@@ -1,4 +1,4 @@
-//v1.2
+//v1.2.5
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -200,36 +200,47 @@ function los() {
 //										tmp.innerText="";
 //v1.1
 //										const z=(doc.querySelector("#area-middle iframe")||{}).src||null;
-										const z=(function(){
-											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("iframe")),
-												m=s?s[0].textContent.match(/<iframe.*src\s*=\s*["']([^"']+).*<\/iframe>/):null;
-											if (m) {
-												tmp.innerHTML=m[1];
-												return tmp.innerText; // oder .textContent 
-											} else return null
-										})();
-										tmp.innerText="";
+//v1.2
+//										const z=(function(){
+//											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("iframe")),
+//												m=s?s[0].textContent.match(/<iframe.*src\s*=\s*["']([^"']+).*<\/iframe>/):null;
+//											if (m) {
+//												tmp.innerHTML=m[1];
+//												return tmp.innerText; // oder .textContent 
+//											} else return null
+//										})();
+//										tmp.innerText="";
+										const z=(function() {
+											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("realstream")).map(x=>{const r=x.textContent.match(/https?:\/\/.*realstream[^"']+/); return r?r[0]:null; })[0]||null;
+											return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
+										})();									
 										if (z) {
 											msg.waiting("&Ouml;ffne Stream [4]");
 											xmlRequest(z,{'responseType':'document'},function(doc) {
-												const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
-															postUrl=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("action")).map(x=>{
-																const u=x.textContent.match(/["']action["']\s*,\s*["']([^"']+)["']/i);
-																return u?u[1]:null;
-															}).filter(x=>x!==null)[0]||null;
-												console.log("Aufrufen",postUrl,postData);
-												if (postData!=="" && postUrl) {
+												const zz=(doc.querySelector("#area-middle iframe")||{}).src||null;
+												if (zz) {
 													msg.waiting("&Ouml;ffne Stream [5]");
-													xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
-														const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
-														let t=null;
-														for (let i=0,z; z=Z[i]; i++) {
-															try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
-															if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
-														}
-														if (t) callback(t); else errfnc("Nichts gefunden [E5]");
-													},()=>errfnc("XML-Fehler! [E6]"));
-												} else errfnc("Nichts gefunden [E7]");
+													xmlRequest(zz,{'responseType':'document'},function(doc) {			
+														const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
+																	postUrl=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("action")).map(x=>{
+																		const u=x.textContent.match(/["']action["']\s*,\s*["']([^"']+)["']/i);
+																		return u?u[1]:null;
+																	}).filter(x=>x!==null)[0]||null;
+														console.log("Aufrufen",postUrl,postData);
+														if (postData!=="" && postUrl) {
+															msg.waiting("&Ouml;ffne Stream [6]");
+															xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
+																const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
+																let t=null;
+																for (let i=0,z; z=Z[i]; i++) {
+																	try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
+																	if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
+																}
+																if (t) callback(t); else errfnc("Nichts gefunden [E5]");
+															},()=>errfnc("XML-Fehler! [E6]"));
+														} else errfnc("Nichts gefunden [E7]");
+													},()=>errfnc("XML-Fehler! [E82]"));
+												} else errfnc("Nichts gefunden [E81]");
 											},()=>errfnc("XML-Fehler! [E8]"));
 										} else errfnc("Nichts gefunden [E9]");
 									},()=>errfnc("XML-Fehler! [E10]"));
