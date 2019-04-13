@@ -1,3 +1,4 @@
+// v1.0
 function start() {
 	importFiles({
 		js:["https://rawgit.com/qwertz0/Hello-World/master/src/base.js"],
