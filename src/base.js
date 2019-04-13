@@ -1,6 +1,6 @@
-//v1.2.6
+//v1.2.7
 var hasEvents=false;
-var TMP;
+
 const flag=document.documentElement.classList,
 			msg=(function() {
 				document.getElementById("spinner").innerHTML='<div class="spinner-msg"><span id="msgTxt" class="spinner-txt"></span></div>';	
@@ -128,12 +128,18 @@ function los() {
 										objContent.className="event-content";
 										obj.appendChild(objContent);
 										if (x.online) {
+											obj.oncontextmenu=function(e) {
+												objContent.innerHTML='';
+												loading=false;
+												e.preventDefault();
+											};
 											obj.onclick=function(e) {
 												if (loading) return;
 												loading=true;
 												console.log("Aufrufen [1]",x.title,x.url);
 												objContent.innerHTML='<div class="event-spinner"></div>';
 												getLinks(x.url,xKey,function(lnks) {
+													if (!loading) return;
 													//console.log("Links",lnks);
 													if (lnks.length===0) {
 														objContent.innerHTML='<div class="event-error">Keine Streams gefunden</div>';
