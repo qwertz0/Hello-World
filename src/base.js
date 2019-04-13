@@ -1,6 +1,6 @@
-//v1.2.5
+//v1.2.6
 var hasEvents=false;
-
+var TMP;
 const flag=document.documentElement.classList,
 			msg=(function() {
 				document.getElementById("spinner").innerHTML='<div class="spinner-msg"><span id="msgTxt" class="spinner-txt"></span></div>';	
@@ -18,7 +18,7 @@ const flag=document.documentElement.classList,
 			})();
 				
 function los() {
-
+	
 	const mehrAlsFussball=window.localStorage.getItem("all")==="true";
 	
 	const leftMenu=document.createElement("div");
@@ -63,17 +63,16 @@ function los() {
 
 			msg.info("Laden [1]");
 			console.log("Laden","http://www.sport365.live/de/home");
-			xmlRequest("http://www.sport365.live/de/home",{'responseType':'document'},function(doc){
-				
+			xmlRequest("http://www.sport365.live/de/home",{'responseType':'document'},function(doc) {				
 				const A=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src).filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x)),
 //v1.1
-//					adshell=(function() {
-//						const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
-//						return s?s+'?'+Math.floor(Math.random()*99999999999):null;
-//					})();
-				      adshell=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("adshell"))[0]||{}).src||null;
+//							adshell=(function() {
+//								const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
+//								return s?s+'?'+Math.floor(Math.random()*99999999999):null;
+//							})();
+								adshell=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("adshell"))[0]||{}).src||null;
 				if (A.length>0) {
-					fetchAdshell(adshell,function() {
+					fetchAdshellLoop(adshell,function() {
 						getKey(A,(xKey)=>{
 							msg.info("Key: "+xKey); console.log("Key",xKey); console.log("Laden",xUrl);
 							xmlRequest(xUrl,{'responseType':'document'},function(doc){
@@ -132,7 +131,7 @@ function los() {
 											obj.onclick=function(e) {
 												if (loading) return;
 												loading=true;
-												console.log("Aufrufen",x.title,x.url);
+												console.log("Aufrufen [1]",x.title,x.url);
 												objContent.innerHTML='<div class="event-spinner"></div>';
 												getLinks(x.url,xKey,function(lnks) {
 													//console.log("Links",lnks);
@@ -169,7 +168,7 @@ function los() {
 								} else msg.err("Nichts gefunden! [E1]")
 								
 								function getLinks(u,k,callback,errfnc) {
-									console.log("Aufrufen","http://www.sport365.live"+u);
+									console.log("Aufrufen [2]","http://www.sport365.live"+u);
 									xmlRequest("http://www.sport365.live"+u,{'responseType':'document'},function(doc){
 										const spns=[...doc.querySelectorAll('span#span_link_links')],
 										Z=spns.map(spn=>{
@@ -186,10 +185,10 @@ function los() {
 								}
 								
 								function getStream(u,k,callback,errfnc) {
-									console.log("Aufrufen",u);
+									console.log("Aufrufen [3]",u);
 									msg.waiting("&Ouml;ffne Stream [3]");
-									xmlRequest(u,{'responseType':'document'},function(doc){
-//v1.0
+									xmlRequest(u,{'responseType':'document'},function(doc){	
+//v1.0				
 //										const z=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("document.write")).map(s=>{
 //											const z=s.textContent.match(/src\s*=\s*["']([^"']+)/i);
 //											if (z) {
@@ -197,28 +196,30 @@ function los() {
 //												return tmp.innerText; // oder .textContent
 //											} else return null;
 //										}).filter(x=>x!==null)[0]||null;
-//										tmp.innerText="";
+//										tmp.innerText="";								
 //v1.1
 //										const z=(doc.querySelector("#area-middle iframe")||{}).src||null;
 //v1.2
 //										const z=(function(){
 //											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("iframe")),
-//												m=s?s[0].textContent.match(/<iframe.*src\s*=\s*["']([^"']+).*<\/iframe>/):null;
+//														m=s.length>0?s[0].textContent.match(/<iframe.*src\s*=\s*["']([^"']+).*<\/iframe>/):null;
 //											if (m) {
 //												tmp.innerHTML=m[1];
 //												return tmp.innerText; // oder .textContent 
 //											} else return null
 //										})();
-//										tmp.innerText="";
+//										tmp.innerText="";								
 										const z=(function() {
-											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("realstream")).map(x=>{const r=x.textContent.match(/https?:\/\/.*realstream[^"']+/); return r?r[0]:null; })[0]||null;
+											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>/https?:\/\/.+\/\w+\/player\/[^"']+/.test(x.textContent)).map(x=>{const r=x.textContent.match(/https?:\/\/.+\/\w+\/player\/[^"']+/); return r?r[0]:null; })[0]||null;
 											return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
 										})();									
 										if (z) {
+											console.log("Aufrufen [4]",z);
 											msg.waiting("&Ouml;ffne Stream [4]");
 											xmlRequest(z,{'responseType':'document'},function(doc) {
 												const zz=(doc.querySelector("#area-middle iframe")||{}).src||null;
 												if (zz) {
+													console.log("Aufrufen [5]",zz);
 													msg.waiting("&Ouml;ffne Stream [5]");
 													xmlRequest(zz,{'responseType':'document'},function(doc) {			
 														const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
@@ -226,30 +227,34 @@ function los() {
 																		const u=x.textContent.match(/["']action["']\s*,\s*["']([^"']+)["']/i);
 																		return u?u[1]:null;
 																	}).filter(x=>x!==null)[0]||null;
-														console.log("Aufrufen",postUrl,postData);
 														if (postData!=="" && postUrl) {
+															console.log("Aufrufen [6]",postUrl,postData);
 															msg.waiting("&Ouml;ffne Stream [6]");
 															xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
-																const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
-																let t=null;
-																for (let i=0,z; z=Z[i]; i++) {
-																	try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
-																	if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
-																}
-																if (t) callback(t); else errfnc("Nichts gefunden [E5]");
+																const banner=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("tags2.adshell.net/p"))[0]||{}).src||null;
+																fetchAdshell(banner,(status)=>{
+																	if (status===0) console.log("Banner OK");
+																		else console.warn("Banner-Fehler",status);
+																	const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
+																	let t=null;
+																	for (let i=0,z; z=Z[i]; i++) {
+																		try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
+																		if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
+																	}
+																	if (t) callback(t); else errfnc("Nichts gefunden [E5]"); // .replace(/\/i$/,"/index.m3u8")
+																});
 															},()=>errfnc("XML-Fehler! [E6]"));
 														} else errfnc("Nichts gefunden [E7]");
 													},()=>errfnc("XML-Fehler! [E82]"));
 												} else errfnc("Nichts gefunden [E81]");
 											},()=>errfnc("XML-Fehler! [E8]"));
-										} else errfnc("Nichts gefunden [E9]");
+										} else errfnc("Nichts gefunden [E9]");				
 									},()=>errfnc("XML-Fehler! [E10]"));
 								}
-
 							},()=>msg.err("XML [E11]"));
 							
 						},(e)=>msg.err(e));
-					}); // fetchAdshell
+					});
 				} else msg.err("Nichts gefunden! [E12]")
 				
 				function getKey(A,callback,errfnc) {
@@ -266,8 +271,10 @@ function los() {
 					}	
 				} // getKey
 				
+				
 				function fetchAdshell(url,callback) {
-					const _fetchAdshell=function(callback) {
+					if (typeof url==='string') {
+						console.log("Lade adshell",url);
 						xmlRequest(url,null,function(txt){
 							const m=txt.match(/url\s*:\s*["']([^"']+)/i);
 							if (m) {
@@ -281,11 +288,17 @@ function los() {
 								}*/,()=>callback(3));
 							} else callback(2);
 						},()=>callback(1));
-					}; // fetchAdshell
-					_fetchAdshell((status)=>{
+					} else {
+						console.log("adshell übersprungen");
+						callback(-1);
+					}
+				} // fetchAdshell	
+						
+				function fetchAdshellLoop(url,callback) {
+					fetchAdshell(url,(status)=>{
 						console.log("adshell-Status",status);
 						if (status===0) {
-							setTimeout(()=>fetchAdshell(url,()=>{}),3600000); // = 60 Min.
+							setTimeout(()=>fetchAdshellLoop(url,()=>{}),3600000); // = 60 Min.
 						} else {
 							const adWarn=document.createElement("div");
 							adWarn.className="ad-warn";
@@ -294,7 +307,7 @@ function los() {
 						}
 						callback(status);
 					});
-				}	//fetchAdshell
+				}	//fetchAdshellLoop
 				
 			},()=>msg.err("XML [E15]"));
 							
