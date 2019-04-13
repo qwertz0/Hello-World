@@ -1,3 +1,4 @@
+/* v1.1 */
 body {
 	transition: .5s linear background-color;
 	background: whitesmoke;
@@ -110,13 +111,14 @@ body {
 .event { border:1px solid lightgray; margin:10px 12px; padding:10px; color: dimgray; border-radius: 4px; background:whitesmoke; position:relative; z-index:1; }
 .event-header { cursor:pointer; display:flex; justify-content:space-between; }
 .event-spinner:before {
-	animation: spinner-rotation .8s linear infinite;
+	animation: spin .7s linear infinite;
   display: inline-block;
   width: 1em;
-  border: 5px solid rgba(105,105,105,0.1);
+  border: 3px solid rgba(105,105,105,0.2);
   border-radius: 50%;
   height: 1em;
-  border-left-color: dimgray;
+  border-left-color: gray;
+  content:' ';
  }
 .event-error { color:red; }
 .event-stream { cursor:pointer; }
