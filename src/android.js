@@ -1,8 +1,8 @@
-// v1.0
+// v1.0.1
 function start() {
 	importFiles({
-		js:["https://rawgit.com/qwertz0/Hello-World/master/src/base.js"],
-		css:["https://rawgit.com/qwertz0/Hello-World/master/src/base.css"]
+		js:["dev/src/base.js"],
+		css:["dev/src/base.css"]
 	},()=>los());
 }
 
@@ -69,7 +69,7 @@ var video={
 			function(success){
 				//console.log(success);
 		    if(success.eventKeycode == 'KEYCODE_BACK'){
-		    	video.close();   
+		    	video.close();
 		    }
 		    if(success.eventType == 'TOUCH_EVENT'){
 		        window.ExoPlayer.showController();
@@ -85,6 +85,7 @@ var video={
 	close:function() {
 		window.ExoPlayer.close();
 		flag.remove("player");
+		adshell.remove();
 		setTimeout(()=>document.addEventListener('backbutton', backbutton),500);
 	}
 };
@@ -99,6 +100,7 @@ var backbutton=(function() {
 			navigator.app.exitApp();
 		} else if (flag.contains("player")) {
 			flag.remove("player");
+			adshell.remove();
 		} else if (flag.contains("err")) {
 			if (hasEvents) msg.clear();
 				else location.reload();
