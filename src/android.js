@@ -1,8 +1,8 @@
-// v1.0.1
+// v1.0.2
 function start() {
 	importFiles({
-		js:["https://rawgit.com/qwertz0/Hello-World/master/src/base.js"],
-		css:["https://rawgit.com/qwertz0/Hello-World/master/src/base.css"]
+		js:[srcUrl+"base.js"],
+		css:[srcUrl+"base.css"]
 	},()=>los());
 }
 
