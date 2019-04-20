@@ -1,4 +1,4 @@
-//v1.2.7
+//v1.3
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -15,6 +15,72 @@ const flag=document.documentElement.classList,
 					err:(s)=>{ flag.add("err"); document.title="FEHLER: "+document.title; txt("FEHLER"+(s?": "+s:"!")); },
 					warn:(s)=>{ flag.add("warn"); txt("ACHTUNG"+(s?": "+s:"!")); }
 				}
+			})(),
+			adshell=(function(){
+				let _timer=null,
+						_err=0;
+				const fetch=function(url,callback) {
+								console.log("Lade adshell (1)",url);
+								xmlRequest(url,null,function(txt){
+									const m=txt.match(/url\s*:\s*["']([^"']+)/i);
+									if (m) {
+										console.log("Lade adshell (2)",m[1]);
+										xmlRequest(m[1],{responseType:'document'},()=>callback(ok())
+										/* wohl nicht notwendig
+										function(doc){
+											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
+														z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
+											if (z) {
+												console.log("Lade adshell (3)",z[1]);
+												xmlRequest(z[1],{responseType:'document'},()=>callback(ok()),()=>callback(err(5)));
+											} else callback(err(4));
+										}*/,()=>callback(err(3)));
+									} else callback(err(2));
+								},()=>callback(err(1)));									
+							},
+							err=function(status) {
+								_err++;
+								console.log("Banner-Error: "+status+" ("+_err+")");
+								if (_err===1) {
+									const adWarn=document.createElement("div");
+									adWarn.className="ad-warn";
+									adWarn.innerHTML="Warnung: Werbung ["+status+"]";
+									document.body.appendChild(adWarn);
+								} else if (_err>4 && _timer!==null) {
+									console.log("==> Remove Adshell");
+									clearTimeout(_timer);
+									_timer=null;
+								}
+								return status;										
+							},
+							ok=function() {
+								console.log("Banner OK");
+								const x=document.querySelector(".ad-warn");
+								if (x) x.remove();
+								_err=0;
+								return 0;
+							};
+				return {
+					remove:function() {
+						if (_timer!==null) {
+							console.log("Remove Adshell");
+							clearTimeout(_timer);
+							_timer=null;
+						}
+					},
+					attach:function(url,callback) {
+						if (_timer!==null) clearTimeout(_timer);
+						console.log("Attach Adshell",url);
+						_err=0;
+						if (typeof url==='string') {
+							_timer=setInterval(fetch,900000,url,()=>{}); // <----- alle 15 Minuten erneuern
+							fetch(url,callback);
+						} else {
+							_timer=null;
+							callback(err(-1));
+						}
+					}
+				};
 			})();
 				
 function los() {
@@ -64,136 +130,129 @@ function los() {
 			msg.info("Laden [1]");
 			console.log("Laden","http://www.sport365.live/de/home");
 			xmlRequest("http://www.sport365.live/de/home",{'responseType':'document'},function(doc) {				
-				const A=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src).filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x)),
-//v1.1
-//							adshell=(function() {
-//								const s=(([].filter.call(doc.querySelectorAll("script:not(:empty)"),x=>x.textContent.includes("adshell.net"))[0]||{}).textContent||"").match(/https?:\/\/.*adshell.net\/[^"']+/);
-//								return s?s+'?'+Math.floor(Math.random()*99999999999):null;
-//							})();
-								adshell=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("adshell"))[0]||{}).src||null;
+				const A=[].map.call(doc.querySelectorAll('script[src]'),x=>x.src).filter(x=>/medianetworkinternational\.com\/js\/[a-f0-9]{32}\.js$/.test(x));
 				if (A.length>0) {
-					fetchAdshellLoop(adshell,function() {
-						getKey(A,(xKey)=>{
-							msg.info("Key: "+xKey); console.log("Key",xKey); console.log("Laden",xUrl);
-							xmlRequest(xUrl,{'responseType':'document'},function(doc){
-								const trs=doc.querySelectorAll('tr[onclick]'),
-											tmp=document.createElement("div");
-								let X=[];
-								for (let i=0, tr, tr2; tr=trs[i], tr2=trs[i+1]; i+=2) {
-									const x=tr.getAttribute("onclick").match(/['"][^"']+["']/g);
-									let url=null;
-									if (x.length===3) {
-										try {
-											url=deCrypt(x[1].slice(1,-1),xKey);
-										} catch(e) {
-											console.log("Fehler Decrypt",e);
-										}
-									}
-									if (url) {
-										const tds=tr.getElementsByTagName("td"), n=tds.length;
-										X.push({
-											url:url,
-											online:(function() {
-												const x=n>1?tds[1].querySelector("img"):null;
-												return x?x.src.includes("dot-green"):null;
-											})(),
-											time:(function() {
-												const x=n>2?tds[2].innerText:"";
-												return /^\d\d:\d\d$/.test(x)?x.replace(/\s*\(direkt\)/i,""):"??:??";
-											})(),
-											title:n>3?tds[3].innerText:"??? - ???",
-											lang:n>4?tds[4].innerText:"?",
-											league:(function() {
-												const x=tr2.querySelector("td:nth-child(2)");
-												return x?x.innerText:"?";
-											})(),
-											german:n>4?(/deutsch|german/i.test(tds[4].innerText)?true:false):null,
-											bundesliga:(function() {
-												const x=tr2.querySelector("td:nth-child(2)");
-												return x?(/bundesliga|german/i.test(x.innerText)?true:false):null;
-											})()
-										});
+					getKey(A,(xKey)=>{
+						msg.info("Key: "+xKey); console.log("Key",xKey); console.log("Laden",xUrl);
+						xmlRequest(xUrl,{'responseType':'document'},function(doc){
+							const trs=doc.querySelectorAll('tr[onclick]'),
+										tmp=document.createElement("div");
+							let X=[];
+							for (let i=0, tr, tr2; tr=trs[i], tr2=trs[i+1]; i+=2) {
+								const x=tr.getAttribute("onclick").match(/['"][^"']+["']/g);
+								let url=null;
+								if (x.length===3) {
+									try {
+										url=deCrypt(x[1].slice(1,-1),xKey);
+									} catch(e) {
+										console.log("Fehler Decrypt",e);
 									}
 								}
-								
-								if (X.length>0) {
-									console.log("Gefundene Events",X);
-									hasEvents=true;
-									msg.clear();
-									X.forEach(x=>{
-										let loading=false;
-										const obj=document.createElement("div"), objContent=document.createElement("div");
-										obj.className='event event-'+(x.online?"online":"offline")+(x.bundesliga?" event-bundesliga":"")+(x.german?" event-german":"");
-										obj.innerHTML='<div class="event-header"><span class="event-time">'+x.time+'</span><span class="event-title"><span class="event-title-title">'+x.title+'</span><span class="event-title-league">'+x.league+'</span></span><span class="event-lang">'+x.lang+'</span></div>';
-										objContent.className="event-content";
-										obj.appendChild(objContent);
-										if (x.online) {
-											obj.oncontextmenu=function(e) {
-												objContent.innerHTML='';
-												loading=false;
-												e.preventDefault();
-											};
-											obj.onclick=function(e) {
-												if (loading) return;
-												loading=true;
-												console.log("Aufrufen [1]",x.title,x.url);
-												objContent.innerHTML='<div class="event-spinner"></div>';
-												getLinks(x.url,xKey,function(lnks) {
-													if (!loading) return;
-													//console.log("Links",lnks);
-													if (lnks.length===0) {
-														objContent.innerHTML='<div class="event-error">Keine Streams gefunden</div>';
-													} else {											
-														objContent.innerHTML="";
-														lnks.forEach((l,i)=>{
-															const lObj=document.createElement("div");
-															lObj.className="event-stream";
-															lObj.innerHTML="Stream "+i;
-															lObj.onclick=function(e) {
-																e.stopPropagation();																
-																lObj.classList.add("event-visited");
-																
-																getStream(l,xKey,(stream)=>{
-																	
-																	console.log("Stream",stream);
-																	flag.add("player");
-																	//msg.clear();
-																	video.start(stream);
-
-																},(e)=>msg.err(e));
-															};
-															objContent.appendChild(lObj);
-														});
-													}
-													loading=false;
-												},(e)=>{ loading=false; objContent.innerHTML='<div class="event-error">'+e+'</div>'; });
-											};
-										}
-										mainContent.appendChild(obj);
+								if (url) {
+									const tds=tr.getElementsByTagName("td"), n=tds.length;
+									X.push({
+										url:url,
+										online:(function() {
+											const x=n>1?tds[1].querySelector("img"):null;
+											return x?x.src.includes("dot-green"):null;
+										})(),
+										time:(function() {
+											const x=n>2?tds[2].innerText:"";
+											return /^\d\d:\d\d$/.test(x)?x.replace(/\s*\(direkt\)/i,""):"??:??";
+										})(),
+										title:n>3?tds[3].innerText:"??? - ???",
+										lang:n>4?tds[4].innerText:"?",
+										league:(function() {
+											const x=tr2.querySelector("td:nth-child(2)");
+											return x?x.innerText:"?";
+										})(),
+										german:n>4?(/deutsch|german/i.test(tds[4].innerText)?true:false):null,
+										bundesliga:(function() {
+											const x=tr2.querySelector("td:nth-child(2)");
+											return x?(/bundesliga|german/i.test(x.innerText)?true:false):null;
+										})()
 									});
-								} else msg.err("Nichts gefunden! [E1]")
-								
-								function getLinks(u,k,callback,errfnc) {
-									console.log("Aufrufen [2]","http://www.sport365.live"+u);
-									xmlRequest("http://www.sport365.live"+u,{'responseType':'document'},function(doc){
-										const spns=[...doc.querySelectorAll('span#span_link_links')],
-										Z=spns.map(spn=>{
-											const x=spn.getAttribute("onclick").match(/['"][^"']+["']/);
-											try {
-												 return deCrypt(x[0].slice(1,-1),k);
-											} catch(e) {
-												//console.log("Fehler Decrypt",e);
-												return null;
-											}
-										}).filter(x=>x!==null);
-										if (Z.length>0) callback(Z); else errfunc("Nichts gefunden! [E2]")
-									},()=>errfnc("XML-Fehler! [E3]"));
 								}
-								
-								function getStream(u,k,callback,errfnc) {
-									console.log("Aufrufen [3]",u);
-									msg.waiting("&Ouml;ffne Stream [3]");
-									xmlRequest(u,{'responseType':'document'},function(doc){	
+							}
+							
+							if (X.length>0) {
+								console.log("Gefundene Events",X);
+								hasEvents=true;
+								msg.clear();
+								X.forEach(x=>{
+									let loading=false;
+									const obj=document.createElement("div"), objContent=document.createElement("div");
+									obj.className='event event-'+(x.online?"online":"offline")+(x.bundesliga?" event-bundesliga":"")+(x.german?" event-german":"");
+									obj.innerHTML='<div class="event-header"><span class="event-time">'+x.time+'</span><span class="event-title"><span class="event-title-title">'+x.title+'</span><span class="event-title-league">'+x.league+'</span></span><span class="event-lang">'+x.lang+'</span></div>';
+									objContent.className="event-content";
+									obj.appendChild(objContent);
+									if (x.online) {
+										obj.oncontextmenu=function(e) {
+											objContent.innerHTML='';
+											loading=false;
+											e.preventDefault();
+										};
+										obj.onclick=function(e) {
+											if (loading) return;
+											loading=true;
+											console.log("Aufrufen [1]",x.title,x.url);
+											objContent.innerHTML='<div class="event-spinner"></div>';
+											getLinks(x.url,xKey,function(lnks) {
+												if (!loading) return;
+												//console.log("Links",lnks);
+												if (lnks.length===0) {
+													objContent.innerHTML='<div class="event-error">Keine Streams gefunden</div>';
+												} else {											
+													objContent.innerHTML="";
+													lnks.forEach((l,i)=>{
+														const lObj=document.createElement("div");
+														lObj.className="event-stream";
+														lObj.innerHTML="Stream "+i;
+														lObj.onclick=function(e) {
+															e.stopPropagation();																
+															lObj.classList.add("event-visited");
+															
+															getStream(l,xKey,(stream)=>{
+																
+																console.log("Stream",stream);
+																flag.add("player");
+																//msg.clear();
+																video.start(stream);
+
+															},(e)=>msg.err(e));
+														};
+														objContent.appendChild(lObj);
+													});
+												}
+												loading=false;
+											},(e)=>{ loading=false; objContent.innerHTML='<div class="event-error">'+e+'</div>'; });
+										};
+									}
+									mainContent.appendChild(obj);
+								});
+							} else msg.err("Nichts gefunden! [E1]")
+							
+							function getLinks(u,k,callback,errfnc) {
+								console.log("Aufrufen [2]","http://www.sport365.live"+u);
+								xmlRequest("http://www.sport365.live"+u,{'responseType':'document'},function(doc){
+									const spns=[...doc.querySelectorAll('span#span_link_links')],
+									Z=spns.map(spn=>{
+										const x=spn.getAttribute("onclick").match(/['"][^"']+["']/);
+										try {
+											 return deCrypt(x[0].slice(1,-1),k);
+										} catch(e) {
+											//console.log("Fehler Decrypt",e);
+											return null;
+										}
+									}).filter(x=>x!==null);
+									if (Z.length>0) callback(Z); else errfunc("Nichts gefunden! [E2]")
+								},()=>errfnc("XML-Fehler! [E3]"));
+							}
+							
+							function getStream(u,k,callback,errfnc) {
+								console.log("Aufrufen [3]",u);
+								msg.waiting("&Ouml;ffne Stream [3]");
+								xmlRequest(u,{'responseType':'document'},function(doc){	
 //v1.0				
 //										const z=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("document.write")).map(s=>{
 //											const z=s.textContent.match(/src\s*=\s*["']([^"']+)/i);
@@ -215,52 +274,49 @@ function los() {
 //											} else return null
 //										})();
 //										tmp.innerText="";								
-										const z=(function() {
-											const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>/https?:\/\/.+\/\w+\/player\/[^"']+/.test(x.textContent)).map(x=>{const r=x.textContent.match(/https?:\/\/.+\/\w+\/player\/[^"']+/); return r?r[0]:null; })[0]||null;
-											return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
-										})();									
-										if (z) {
-											console.log("Aufrufen [4]",z);
-											msg.waiting("&Ouml;ffne Stream [4]");
-											xmlRequest(z,{'responseType':'document'},function(doc) {
-												const zz=(doc.querySelector("#area-middle iframe")||{}).src||null;
-												if (zz) {
-													console.log("Aufrufen [5]",zz);
-													msg.waiting("&Ouml;ffne Stream [5]");
-													xmlRequest(zz,{'responseType':'document'},function(doc) {			
-														const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
-																	postUrl=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("action")).map(x=>{
-																		const u=x.textContent.match(/["']action["']\s*,\s*["']([^"']+)["']/i);
-																		return u?u[1]:null;
-																	}).filter(x=>x!==null)[0]||null;
-														if (postData!=="" && postUrl) {
-															console.log("Aufrufen [6]",postUrl,postData);
-															msg.waiting("&Ouml;ffne Stream [6]");
-															xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
-																const banner=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("tags2.adshell.net/p"))[0]||{}).src||null;
-																fetchAdshell(banner,(status)=>{
-																	if (status===0) console.log("Banner OK");
-																		else console.warn("Banner-Fehler",status);
-																	const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
-																	let t=null;
-																	for (let i=0,z; z=Z[i]; i++) {
-																		try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
-																		if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
-																	}
-																	if (t) callback(t); else errfnc("Nichts gefunden [E5]"); // .replace(/\/i$/,"/index.m3u8")
-																});
-															},()=>errfnc("XML-Fehler! [E6]"));
-														} else errfnc("Nichts gefunden [E7]");
-													},()=>errfnc("XML-Fehler! [E82]"));
-												} else errfnc("Nichts gefunden [E81]");
-											},()=>errfnc("XML-Fehler! [E8]"));
-										} else errfnc("Nichts gefunden [E9]");				
-									},()=>errfnc("XML-Fehler! [E10]"));
-								}
-							},()=>msg.err("XML [E11]"));
+									const z=(function() {
+										const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>/https?:\/\/.+\/\w+\/player\/[^"']+/.test(x.textContent)).map(x=>{const r=x.textContent.match(/https?:\/\/.+\/\w+\/player\/[^"']+/); return r?r[0]:null; })[0]||null;
+										return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
+									})();									
+									if (z) {
+										console.log("Aufrufen [4]",z);
+										msg.waiting("&Ouml;ffne Stream [4]");
+										xmlRequest(z,{'responseType':'document'},function(doc) {
+											const zz=(doc.querySelector("#area-middle iframe")||{}).src||null;
+											if (zz) {
+												console.log("Aufrufen [5]",zz);
+												msg.waiting("&Ouml;ffne Stream [5]");
+												xmlRequest(zz,{'responseType':'document'},function(doc) {			
+													const postData=[].map.call(doc.querySelectorAll('input[type="hidden"]'),x=>x.name+"="+x.value).join("&"),
+																postUrl=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("action")).map(x=>{
+																	const u=x.textContent.match(/["']action["']\s*,\s*["']([^"']+)["']/i);
+																	return u?u[1]:null;
+																}).filter(x=>x!==null)[0]||null;
+													if (postData!=="" && postUrl) {
+														console.log("Aufrufen [6]",postUrl,postData);
+														msg.waiting("&Ouml;ffne Stream [6]");
+														xmlRequest(postUrl,{'post':postData,'responseType':'document','header':[["Content-Type", "application/x-www-form-urlencoded"]]},function (doc) {
+															const banner=([].filter.call(doc.querySelectorAll("script[src]"),x=>x.src.includes("tags2.adshell.net/p"))[0]||{}).src||null;
+															adshell.attach(banner,(status)=>{
+																const Z=[].filter.call(doc.querySelectorAll('script:not([src])'),x=>x.textContent.includes("vjs_options")).map(x=>x.textContent.match(/["']([^"']+)["']/g)).reduce((a,b)=>a.concat(b),[]).sort((a,b)=>a.length<b.length);
+																let t=null;
+																for (let i=0,z; z=Z[i]; i++) {
+																	try { t=deCrypt(z.slice(1,-1),k); } catch (e) { t=null; }
+																	if (t!==null && /\/(i$|index\.m3u8?)/.test(t)) break; // TODO: evtl. stabiler machen
+																} // for
+																if (t) callback(t); else errfnc("Nichts gefunden [E5]"); // .replace(/\/i$/,"/index.m3u8")
+															}); // adshell.attach														
+														},()=>errfnc("XML-Fehler! [E6]"));
+													} else errfnc("Nichts gefunden [E7]");
+												},()=>errfnc("XML-Fehler! [E82]"));
+											} else errfnc("Nichts gefunden [E81]");
+										},()=>errfnc("XML-Fehler! [E8]"));
+									} else errfnc("Nichts gefunden [E9]");				
+								},()=>errfnc("XML-Fehler! [E10]"));
+							} // function getStream
 							
-						},(e)=>msg.err(e));
-					});
+						},()=>msg.err("XML [E11]"));	
+					},(e)=>msg.err(e));
 				} else msg.err("Nichts gefunden! [E12]")
 				
 				function getKey(A,callback,errfnc) {
@@ -276,45 +332,7 @@ function los() {
 						},()=>errfnc("XML [E14]"));
 					}	
 				} // getKey
-				
-				
-				function fetchAdshell(url,callback) {
-					if (typeof url==='string') {
-						console.log("Lade adshell",url);
-						xmlRequest(url,null,function(txt){
-							const m=txt.match(/url\s*:\s*["']([^"']+)/i);
-							if (m) {
-								xmlRequest(m[1],{responseType:'document'},()=>callback(0)
-								/* wohl nicht notwendig
-								function(doc){
-									const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>x.textContent.includes("location.replace"))[0]||null,
-												z=s.textContent.match(/location\.replace\s*\(\s*["']([^"']+)/i);
-									if (z) xmlRequest(z[1],{responseType:'document'},()=>callback(0),()=>callback(5));
-										else callback(4);
-								}*/,()=>callback(3));
-							} else callback(2);
-						},()=>callback(1));
-					} else {
-						console.log("adshell übersprungen");
-						callback(-1);
-					}
-				} // fetchAdshell	
-						
-				function fetchAdshellLoop(url,callback) {
-					fetchAdshell(url,(status)=>{
-						console.log("adshell-Status",status);
-						if (status===0) {
-							setTimeout(()=>fetchAdshellLoop(url,()=>{}),3600000); // = 60 Min.
-						} else {
-							const adWarn=document.createElement("div");
-							adWarn.className="ad-warn";
-							adWarn.innerHTML="Warnung: Werbung ["+status+"]";
-							document.body.appendChild(adWarn);							
-						}
-						callback(status);
-					});
-				}	//fetchAdshellLoop
-				
+								
 			},()=>msg.err("XML [E15]"));
 							
 /////////////////////// FUNKTIONEN ////////////////////////////////////
@@ -372,28 +390,6 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 				return JSON.parse(CryptoJS.AES.decrypt(window.atob(s), k, {format: ll}).toString(CryptoJS.enc.Utf8));
 			} // deCrypt
 
-			function xmlRequest(url,param,callback,errfnc) { // Vorlage: v2.0.1
-				if (typeof param === 'function') { errfnc=callback; callback=param; param=""; }
-				callback = (typeof callback === 'function') ? callback : function() {};
-				errfnc = (typeof errfnc === 'function') ? errfnc : callback;
-				param = (typeof param === 'string')?{'responseType': param }:(param && typeof param==='object' && param.toString()==="[object Object]")?param:{};		
-				if ('post' in param===false) param.post=false;
-				var xhr=new XMLHttpRequest();
-				if (param.hasOwnProperty("responseType")) xhr.responseType=param.responseType;
-				xhr.onreadystatechange=function() {
-					if (xhr.readyState===4) {
-						if (xhr.status===200) {
-							if (xhr.response!==null) callback(xhr.response,200);
-								else { console.warn("xhr-Error: Wrong Type! No '"+(param.responseType?param.responseType:"DOMString")+"' (Response Content-Type: '"+xhr.getResponseHeader("Content-Type")+"')"); errfnc(null,-200); }
-						} else { console.warn("xhr-Error! (Status: "+xhr.status+")"); errfnc(xhr.response,xhr.status); }
-					}
-				} // onreadystatechange
-				xhr.open((param.post!==false)?"POST":"GET",url,true);
-				if ('header' in param) param.header.forEach(([k,v])=>xhr.setRequestHeader(k,v));
-				if (typeof param.post === 'boolean') xhr.send(); else xhr.send(param.post);
-				return xhr;
-			} // xmlRequest
-
 			function unwise(txt) {
 				var c = txt,
 						a = 5,
@@ -428,3 +424,25 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 		} // if (isInit)
 	}); // video.init
 } // los
+
+function xmlRequest(url,param,callback,errfnc) { // Vorlage: v2.0.1
+	if (typeof param === 'function') { errfnc=callback; callback=param; param=""; }
+	callback = (typeof callback === 'function') ? callback : function() {};
+	errfnc = (typeof errfnc === 'function') ? errfnc : callback;
+	param = (typeof param === 'string')?{'responseType': param }:(param && typeof param==='object' && param.toString()==="[object Object]")?param:{};		
+	if ('post' in param===false) param.post=false;
+	var xhr=new XMLHttpRequest();
+	if (param.hasOwnProperty("responseType")) xhr.responseType=param.responseType;
+	xhr.onreadystatechange=function() {
+		if (xhr.readyState===4) {
+			if (xhr.status===200) {
+				if (xhr.response!==null) callback(xhr.response,200);
+					else { console.warn("xhr-Error: Wrong Type! No '"+(param.responseType?param.responseType:"DOMString")+"' (Response Content-Type: '"+xhr.getResponseHeader("Content-Type")+"')"); errfnc(null,-200); }
+			} else { console.warn("xhr-Error! (Status: "+xhr.status+")"); errfnc(xhr.response,xhr.status); }
+		}
+	} // onreadystatechange
+	xhr.open((param.post!==false)?"POST":"GET",url,true);
+	if ('header' in param) param.header.forEach(([k,v])=>xhr.setRequestHeader(k,v));
+	if (typeof param.post === 'boolean') xhr.send(); else xhr.send(param.post);
+	return xhr;
+} // xmlRequest
