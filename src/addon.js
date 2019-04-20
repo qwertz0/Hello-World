@@ -1,6 +1,6 @@
-// v1.0.1
+// v1.0.2
 function start() {
-	const baseUrl="https://rawgit.com/qwertz0/Hello-World/master/src/";
+	const baseUrl="/dev/src/";
 	importFiles({
 		js:["hls.light.min.js","base.js"].map(x=>baseUrl+x),
 		css:[baseUrl+"base.css"]
@@ -27,7 +27,8 @@ var video={
 		    if (data.fatal) {
 		    	msg.err(hls_fehlermeldung);
 		    	video.hls.destroy();
-		    	flag.remove("player");					    				    		
+		    	flag.remove("player");
+		    	adshell.remove();
 		    } else if (data.details!=="bufferStalledError") msg.warn(hls_fehlermeldung); 		
 			}			
 
@@ -74,6 +75,7 @@ document.addEventListener("keydown", function(e) {
 				video.hls=null;
 			}
 			msg.clear();
+			adshell.remove();
 		} else if (flag.contains("err")) {
 			if (hasEvents) msg.clear();
 				else location.reload();
