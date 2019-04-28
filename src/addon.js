@@ -1,9 +1,8 @@
-// v1.0.2
+// v1.0.3
 function start() {
-	const baseUrl="https://rawgit.com/qwertz0/Hello-World/master/src/";
 	importFiles({
-		js:["hls.light.min.js","base.js"].map(x=>baseUrl+x),
-		css:[baseUrl+"base.css"]
+		js:["https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js",srcUrl+"base.js"],
+		css:[srcUrl+"base.css"]
 	},()=>los());
 }
 
