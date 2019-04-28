@@ -1,4 +1,4 @@
-//v1.3
+//v1.3.1
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -12,7 +12,7 @@ const flag=document.documentElement.classList,
 					info:(s)=>txt(s),
 					waiting:(s)=>{ flag.add("waiting"); txt(s); },
 					clear:()=>{ flag.remove("err","waiting","warn"); txt(); },
-					err:(s)=>{ flag.add("err"); document.title="FEHLER: "+document.title; txt("FEHLER"+(s?": "+s:"!")); },
+					err:(s)=>{ flag.add("err"); /*document.title="FEHLER: "+document.title;*/ txt("FEHLER"+(s?": "+s:"!")); },
 					warn:(s)=>{ flag.add("warn"); txt("ACHTUNG"+(s?": "+s:"!")); }
 				}
 			})(),
