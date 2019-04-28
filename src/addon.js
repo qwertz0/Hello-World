@@ -1,7 +1,7 @@
-// v1.0.3
+// v1.0.4
 function start() {
 	importFiles({
-		js:["https://cdn.jsdelivr.net/npm/hls.js/dist/hls.min.js",srcUrl+"base.js"],
+		js:[srcURL+"hls.min.js",srcUrl+"base.js"],
 		css:[srcUrl+"base.css"]
 	},()=>los());
 }
