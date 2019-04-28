@@ -1,7 +1,7 @@
 // v1.0.4
 function start() {
 	importFiles({
-		js:[srcURL+"hls.min.js",srcUrl+"base.js"],
+		js:[srcUrl+"hls.min.js",srcUrl+"base.js"],
 		css:[srcUrl+"base.css"]
 	},()=>los());
 }
