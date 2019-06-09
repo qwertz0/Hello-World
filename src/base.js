@@ -1,4 +1,4 @@
-//v1.3.1
+//v1.3.2
 var hasEvents=false;
 
 const flag=document.documentElement.classList,
@@ -273,15 +273,16 @@ function los() {
 //												return tmp.innerText; // oder .textContent 
 //											} else return null
 //										})();
-//										tmp.innerText="";								
-									const z=(function() {
-										const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>/https?:\/\/.+\/\w+\/player\/[^"']+/.test(x.textContent)).map(x=>{const r=x.textContent.match(/https?:\/\/.+\/\w+\/player\/[^"']+/); return r?r[0]:null; })[0]||null;
-										return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
-									})();									
-									if (z) {
-										console.log("Aufrufen [4]",z);
-										msg.waiting("&Ouml;ffne Stream [4]");
-										xmlRequest(z,{'responseType':'document'},function(doc) {
+//										tmp.innerText="";
+//v1.3.1									
+//									const z=(function() {
+//										const s=[].filter.call(doc.querySelectorAll("script:not([src])"),x=>/https?:\/\/.+\/\w+\/player\/[^"']+/.test(x.textContent)).map(x=>{const r=x.textContent.match(/https?:\/\/.+\/\w+\/player\/[^"']+/); return r?r[0]:null; })[0]||null;
+//										return s?s+([...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('')):null;
+//									})();									
+//									if (z) {
+//										console.log("Aufrufen [4]",z);
+//										msg.waiting("&Ouml;ffne Stream [4]");
+//										xmlRequest(z,{'responseType':'document'},function(doc) {
 											const zz=(doc.querySelector("#area-middle iframe")||{}).src||null;
 											if (zz) {
 												console.log("Aufrufen [5]",zz);
@@ -310,8 +311,8 @@ function los() {
 													} else errfnc("Nichts gefunden [E7]");
 												},()=>errfnc("XML-Fehler! [E82]"));
 											} else errfnc("Nichts gefunden [E81]");
-										},()=>errfnc("XML-Fehler! [E8]"));
-									} else errfnc("Nichts gefunden [E9]");				
+//										},()=>errfnc("XML-Fehler! [E8]"));
+//									} else errfnc("Nichts gefunden [E9]");				
 								},()=>errfnc("XML-Fehler! [E10]"));
 							} // function getStream
 							
